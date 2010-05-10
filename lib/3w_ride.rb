@@ -1,3 +1,21 @@
+module Guidance
+	def guidance_system x, y, dest_x, dest_y, angle
+		vx, vy = dest_x - x, dest_y - y
+		if vx.abs < 0.1 and vy.abs <= 0.1
+			yield 0, 0
+		else
+			length = Math.sqrt(vx * vx + vy * vy)
+			vx /= length
+			vy /= length
+			ax, ay = Math.cos(angle), Math.sin(angle)
+			cos_between = vx * ax + vy * ay
+			sin_between = vx * -ay + vy * ax
+			yield sin_between, cos_between
+		end
+	end
+end
+
+
 module UIMethods
   LEFT_MARGIN = 12
 
@@ -18,13 +36,14 @@ class Robot
   def initialize
     @x, @y = $width-$left + 50, $height/2 - $top - 50
     @center_x, @center_y = @x + 50, @y + 50
+    @dest_x, @dest_y = 0, 0
     
     @moving = false
     
     @wheels = []
-    @wheels << Wheel.new(@center_x, @center_y-45, 90)
-    @wheels << Wheel.new(@center_x-20, @center_y+5, 0)
-    @wheels << Wheel.new(@center_x+20, @center_y+5, 0)
+    @wheels << Wheel.new(@center_x, @center_y-25, 0)
+    @wheels << Wheel.new(@center_x-20, @center_y+20, 0)
+    @wheels << Wheel.new(@center_x+20, @center_y+20, 0)
   end
   
   def draw
@@ -41,29 +60,45 @@ class Robot
     end
   end
   
-  def update(x,y)
-    @target_x, @target_y = x, y
+  def update
+    @wheels.each {|w| w.update(@dest_x, @dest_y) }
   end
   
-  def set_destination
-		@dest_x, @dest_y = @target_x, @target_y
+  def set_destination(x, y)
+		@dest_x, @dest_y = x, y
 		@moving = true
 	end
   
 end
 
 class Wheel
-  attr_reader :x, :y
+  include Guidance
+  attr_reader :x, :y, :angle
 
 	def initialize x, y, angle
-		@x, @y, @angle = x, y, angle
-
-		$app.rotate @angle
+		@x, @y, @angle = x, y, angle + 2*Math::PI
+		@dest_x, @dest_y = 0, 0
 	end
 
 	def draw
+		$app.rotate((@angle-$angle)*180.0/Math::PI)
+		$app.debug((@angle-$angle)*180.0/Math::PI)
 		$app.fill $app.white
-    $app.arrow(@x, @y, 20)
+	  $app.star @x, @y, 3, 10, 5
+	  $app.star @x, @y, 1, 10, 5
+    $angle = @angle
+	end
+	
+	def update(x, y)
+	  @dest_x, @dest_y = x, y
+	  
+	  guidance_system @x, @y, @dest_x, @dest_y, @angle do |direction, on_target|
+			aim direction
+		end
+	end
+	
+	def aim direction
+		@angle += [[-0.1, direction].max, 0.1].min
 	end
 end
 
@@ -75,8 +110,7 @@ class Operator
   end
   
   def self.update_scene
-    button, x, y = @input
-    robot.update(x, y)
+    robot.update
     $app.clear do
       create_scene
       @robot.draw
@@ -86,10 +120,6 @@ class Operator
   def self.robot
     @robot
   end
-  
-  def self.read_input
-		@input = $app.mouse
-	end
   
   def self.create_scene
     @controls = $app.stack :width => 0.25 do 
@@ -126,16 +156,15 @@ Shoes.app(:title => '3W Ride', :width => 800, :height => 520, :resizable => fals
   
   STACK_STYLE = { :margin => 5, :padding => 4 }
   
-  $app = self
-  
+  $app   = self
+  $angle = 0
   Operator.new_experiment
   
   click do |button, x, y|
-    Operator.robot.set_destination if (($left..$right).include? x) && (($top..$bottom).include? y)
+    Operator.robot.set_destination(x, y) if (($left..$right).include? x) && (($top..$bottom).include? y)
 	end
   
-  animate(25) do
-    Operator.read_input
+  animate(40) do
     Operator.update_scene
   end
 end
