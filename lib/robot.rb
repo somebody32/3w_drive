@@ -32,7 +32,7 @@ class Robot
   end
   
   def update
-    @wheels.each {|w| w.update(180, 0) }
+    @wheels.each {|w| w.update(175, 0) }
   end
   
   def set_destination(x, y)
