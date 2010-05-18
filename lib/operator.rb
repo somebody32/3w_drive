@@ -5,7 +5,7 @@ class Operator
   
   
   def self.new_experiment
-    create_scene
+    create_scene    
     @robot = Robot.new
   end
   
@@ -25,13 +25,19 @@ class Operator
     @controls = $app.stack :width => 0.25 do 
       $app.background rgb(210, 210, 210), :curve => 20
 
-      %w(First Second Third).each { |i| UIMethods.add_wheel_fields(i) }
+      %w(first second third).each { |i| UIMethods.add_wheel_fields(i) }
 
       $app.flow :margin_left => 60, :margin_top => 20 do
         $app.button "Run" do
-
+          
         end
-      end       
+      end
+      
+      if robot
+        3.times do |w|
+          $app.inscription "#{w+1} a:#{self.robot.wheels[w].int_angle}", :align => "center", :margin => 0
+        end
+      end
     end
 
     @visualization = $app.stack :width => 0.75 do

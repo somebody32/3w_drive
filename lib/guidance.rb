@@ -13,4 +13,26 @@ module Guidance
 			yield sin_between, cos_between
 		end
 	end
+	
+	def compensate_angle(angle, target_angle)
+	  k = 1
+	  sigma = 100 
+	  d = 1.5
+	  delta = 0.01
+	  ksi = [0, 0]
+	  st = 0.005
+	  ksi[0] = ksi[1]
+	  error = target_angle - angle
+	  ksi[1] = ksi[0] + st * sigma * (error - ksi[0])
+	  u = k * (ksi[0] + sigma * (error - ksi[0]))
+	  
+	  
+	  u += d if u > delta
+	  u -= d if u < -delta
+	    
+	  u = 0.5  if u > 0.5
+	  u = -0.5 if u < -0.5
+	  
+	  u
+  end
 end

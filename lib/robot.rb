@@ -1,4 +1,4 @@
-require 'wheel.rb'
+require 'wheel'
 
 class Robot
   attr_reader :x, :y, :wheels
@@ -12,9 +12,9 @@ class Robot
     @moving = false
     
     @wheels = []
-    @wheels << Wheel.new(@center_x, @center_y-25, 0)
-    @wheels << Wheel.new(@center_x-20, @center_y+20, 0)
-    @wheels << Wheel.new(@center_x+20, @center_y+20, 0)
+    @wheels << Wheel.new(@center_x, @center_y-25, Math::PI/2)
+    @wheels << Wheel.new(@center_x-20, @center_y+20, Math::PI/2)
+    @wheels << Wheel.new(@center_x+20, @center_y+20, Math::PI/2)
   end
   
   def draw
@@ -32,7 +32,7 @@ class Robot
   end
   
   def update
-    @wheels.each {|w| w.update(@dest_x, @dest_y) }
+    @wheels.each {|w| w.update(180, 0) }
   end
   
   def set_destination(x, y)
