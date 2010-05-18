@@ -50,7 +50,7 @@ class Operator
 
     $width, $height =  @visualization.width,  @visualization.height 
 
-    $left   = $app.width  - @visualization.width - 5
+    $left   = $app.width  - @visualization.width + 5
     $right  = $left  + @visualization.width
     $top    = 5
     $bottom = $app.height - 5

@@ -18,7 +18,7 @@ module Guidance
 	  k = 1
 	  sigma = 100 
 	  d = 1.5
-	  delta = 0.001
+	  delta = 0.01
 	  ksi = [0, 0]
 	  st = 0.005
 	  ksi[0] = ksi[1]
@@ -30,8 +30,8 @@ module Guidance
 	  u += d if u > delta
 	  u -= d if u < -delta
 	    
-	  u = 0.01  if u > 0.01
-	  u = -0.01 if u < -0.01
+	  u = 0.5  if u > 0.5
+	  u = -0.5 if u < -0.5
 	  
 	  u
   end
