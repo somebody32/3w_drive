@@ -19,6 +19,10 @@ class Wheel
     $angle = @angle
 	end
 	
+	def move(x, y)
+	  @x, @y = x, y
+	end
+	
 	def angle=(val)
 	  @angle = val - Math::PI/2
 	end
@@ -26,19 +30,19 @@ class Wheel
 	def update(angle, momentum)
 	  @dest_angle, @dest_momentum = angle/180.0*Math::PI - Math::PI/2, momentum
 	  
-	  $app.debug("angle = #{@angle*180.0/Math::PI}, da = #{@dest_angle*180.0/Math::PI}")
-	  
 	  next_angle = compensate_angle(@angle, @dest_angle)
 	  aim next_angle
 	  
-	  #guidance_system @x, @y, @dest_x, @dest_y, @angle do |direction, on_target|
-		#	aim direction
-		#end
+	  next_speed = compensate_momentum(@momentum, @dest_momentum-@momentum)
+	  boost next_speed
 	end
 	
 	def aim direction
 		@angle += [[-0.1, direction].max, 0.1].min
-    # @angle += direction
+	end
+	
+	def boost speed
+	  @momentum += [[-0.01, speed].max, 0.01].min
 	end
 	
 	def int_angle
