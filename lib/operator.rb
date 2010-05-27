@@ -27,9 +27,12 @@ class Operator
 
       %w(first second third).each { |i| UIMethods.add_wheel_fields(i) }
 
-      $app.flow :margin_left => 60, :margin_top => 20 do
+      $app.flow :margin_left => 30, :margin_top => 20 do
         $app.button "Run" do
-          
+          $running = true
+        end
+        $app.button "Stop" do
+          $running = false
         end
       end
       

@@ -1,3 +1,4 @@
+#!/usr/bin/env open -a Shoes.app
 require 'guidance'
 require 'ui_methods'
 require 'operator'
@@ -9,6 +10,8 @@ Shoes.app(:title => '3W Ride', :width => 800, :height => 550, :resizable => fals
   
   $app   = self
   $angle = 0
+  $running = false
+  first_run = true
   Operator.new_experiment
   
   click do |button, x, y|
@@ -17,6 +20,11 @@ Shoes.app(:title => '3W Ride', :width => 800, :height => 550, :resizable => fals
 	end
   
   animate(40) do
-    Operator.update_scene
+    if first_run
+      Operator.update_scene
+      first_run = false
+    else
+      Operator.update_scene if $running
+    end
   end
 end

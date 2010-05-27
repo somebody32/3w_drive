@@ -31,15 +31,11 @@ class Robot
     end
   end
   
-  def update
-    i = 0
-    s = 0 
+  def update 
     @wheels.each do |w|
-      s = 1 if i == 0
-      w.update(310, s)
+      w.update(90, 0)
       dx, dy = calculate_shift(w.angle, w.momentum)
       move dx, dy
-      i += 1
     end    
   end
   
