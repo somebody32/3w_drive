@@ -31,9 +31,9 @@ class Robot
     end
   end
   
-  def update 
-    @wheels.each do |w|
-      w.update(90, 0)
+  def update(wheels_array)
+    @wheels.each_with_index do |w, i|
+      w.update(wheels_array[i][0], wheels_array[i][1])
       dx, dy = calculate_shift(w.angle, w.momentum)
       move dx, dy
     end    
