@@ -32,9 +32,18 @@ class Robot
   end
   
   def update(wheels_array)    
+    if @moving
+      if Math.hypot(@dest_x-@center_x, @dest_y-@center_y) > 5
+        s = 0.5 
+      else
+        s = 0
+        @moving = false
+      end
+    end
+    
     @wheels.each_with_index do |w, i|
-      update_angle = @moving ? @dest_angle : wheels_array[i][0]
-      w.update(update_angle, wheels_array[i][1])
+      update_angle, s = @moving ? [@dest_angle, s] : [wheels_array[i][0],wheels_array[i][1]] 
+      w.update(update_angle, s)
       dx, dy = calculate_shift(w.angle, w.momentum)
       move dx, dy
     end    
