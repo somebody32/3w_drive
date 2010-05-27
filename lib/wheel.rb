@@ -33,7 +33,7 @@ class Wheel
 	  next_angle = compensate_angle(@angle, @dest_angle)
 	  aim next_angle
 	  
-	  next_speed = compensate_momentum(@momentum, @dest_momentum-@momentum)
+	  next_speed = compensate_momentum(@momentum, @dest_momentum)
 	  boost next_speed
 	end
 	

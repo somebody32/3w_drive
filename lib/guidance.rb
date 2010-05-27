@@ -39,12 +39,12 @@ module Guidance
   def compensate_momentum(momentum, target_momentum)
 	  k = 1
 	  sigma = 100 
-	  d = 1.5
-	  delta = 0.01
+	  d = 1.0
+	  delta = 0.5
 	  ksi = [0, 0]
 	  st = 0.005
 	  ksi[0] = ksi[1]
-	  error = momentum - target_momentum
+	  error = target_momentum - momentum
 	  ksi[1] = ksi[0] + st * sigma * (error - ksi[0])
 	  u = k * (ksi[0] + sigma * (error - ksi[0]))
 	  

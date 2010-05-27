@@ -18,7 +18,7 @@ class Robot
   end
   
   def draw
-    $app.stroke $app.red
+    $app.stroke $app.black
     $app.fill $app.red(0.3)
     $app.oval(@x, @y, 100)
     $app.fill $app.white
@@ -35,8 +35,8 @@ class Robot
     i = 0
     s = 0 
     @wheels.each do |w|
-      s = 0.01 if i == 0
-      w.update(90, s)
+      s = 1 if i == 0
+      w.update(310, s)
       dx, dy = calculate_shift(w.angle, w.momentum)
       move dx, dy
       i += 1
@@ -51,7 +51,7 @@ class Robot
 	def move(dx, dy)
     nx = @x + dx
     ny = @y + dy
-    if (($left..$right).include? nx) && (($top..$bottom).include? ny)
+    if (($left..$right).include? nx) && (($top..$bottom-100).include? ny)
       @x, @y = nx, ny
       @center_x, @center_y = @x + 50, @y + 50
       @wheels[0].move @center_x, @center_y-25
@@ -63,14 +63,21 @@ class Robot
 	private
   
   def calculate_shift(angle, speed)
-    angle = angle + Math::PI/2
-    angle = angle if (0..Math::PI/2).include? angle
-    angle = Math::PI - angle if (Math::PI/2..Math::PI).include? angle
-    angle = angle - Math::PI if (Math::PI..3*Math::PI/2).include? angle
-    angle = 2*Math::PI - angle if (3*Math::PI/2..2*Math::PI).include? angle
+    angle += Math::PI/2
     
-    x_shift = Math::cos(angle)*speed
-    y_shift = Math::sin(angle)*speed
+    angle, x_sign, y_sign = case angle
+      when 0..Math::PI/2
+        [angle, "+", "-"]
+      when Math::PI/2..Math::PI
+        [Math::PI - angle, "-", "-"]
+      when Math::PI..3*Math::PI/2
+        [angle - Math::PI, "-", "+"]
+      when 3*Math::PI/2..2*Math::PI
+        [2*Math::PI - angle, "+", "+"]
+    end
+    
+    x_shift = eval("#{x_sign}Math::cos(angle)*speed")
+    y_shift = eval("#{y_sign}Math::sin(angle)*speed")
     [x_shift, y_shift]
   end
   
