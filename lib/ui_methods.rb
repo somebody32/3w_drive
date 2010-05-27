@@ -6,7 +6,11 @@ module UIMethods
 
     $app.inscription 'Angle',    :margin => 0, :margin_left => LEFT_MARGIN
     eval("@@#{wheel_no}_angle = $app.edit_line :margin => 0, :margin_left => LEFT_MARGIN-4, :width => 100, :text => i[0]")
-    $app.inscription 'Momentum', :margin => 0, :margin_left => LEFT_MARGIN
+    $app.inscription 'Speed', :margin => 0, :margin_left => LEFT_MARGIN
     eval("@@#{wheel_no}_momentum = $app.edit_line :margin => 0, :margin_left => LEFT_MARGIN-4, :width => 100, :text => i[1]")
+  end
+  
+  def self.check_borders(x, y)
+    (($left..$right).include? x) && (($top..$bottom-100).include? y)
   end
 end
