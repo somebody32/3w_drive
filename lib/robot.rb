@@ -33,7 +33,7 @@ class Robot
   
   def update(wheels_array)    
     if @moving
-      if Math.hypot(@dest_x-@center_x, @dest_y-@center_y) > 5
+      if Math.hypot(@dest_x-@center_x, @dest_y-@center_y) > 10
         s = 0.5 
       else
         s = 0
@@ -73,7 +73,7 @@ class Robot
 	def move(dx, dy)
     nx = @x + dx
     ny = @y + dy
-    if UIMethods.check_borders(nx, ny)
+    if UIMethods.check_borders(nx, ny, $left-10, $right-92, $top-10, $bottom-90 )
       set_center(nx, ny)
       @wheels[0].move @center_x, @center_y-25
       @wheels[1].move @center_x-20, @center_y+20
