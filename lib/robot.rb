@@ -42,6 +42,7 @@ class Robot
     end
     
     @wheels.each_with_index do |w, i|
+      set_destination(@dest_x, @dest_y) if @moving
       update_angle, s = @moving ? [@dest_angle, s] : [wheels_array[i][0],wheels_array[i][1]] 
       w.update(update_angle, s)
       dx, dy = calculate_shift(w.angle, w.momentum)
